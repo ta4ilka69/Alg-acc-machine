@@ -6,26 +6,19 @@ def parse_code(code):
         line = lines[i].strip()
         if line.startswith("while"):
             condition = line.split("(")[1].split(")")[0]
-            inner_statements, i = parse_block(lines, i+1)
-            statements.append({
-                "name": "while",
-                "condition": condition,
-                "statements": inner_statements
-            })
+            inner_statements, i = parse_block(lines, i + 1)
+            statements.append({"name": "while", "condition": condition, "statements": inner_statements})
         elif line.startswith("if"):
             condition = line.split("(")[1].split(")")[0]
-            inner_statements, i = parse_block(lines, i+1)
-            statements.append({
-                "name": "if",
-                "condition": condition,
-                "statements": inner_statements
-            })
+            inner_statements, i = parse_block(lines, i + 1)
+            statements.append({"name": "if", "condition": condition, "statements": inner_statements})
         elif line.startswith("{") or line.endswith("}"):
             i += 1
         else:
             statements.append(line)
             i += 1
     return statements
+
 
 def parse_block(lines, start_index):
     statements = []
@@ -41,22 +34,15 @@ def parse_block(lines, start_index):
             # Nested control flow structure
             if line.startswith("while"):
                 condition = line.split("(")[1].split(")")[0]
-                inner_statements, i = parse_block(lines, i+1)
-                statements.append({
-                    "name": "while",
-                    "condition": condition,
-                    "statements": inner_statements
-                })
+                inner_statements, i = parse_block(lines, i + 1)
+                statements.append({"name": "while", "condition": condition, "statements": inner_statements})
             elif line.startswith("if"):
                 condition = line.split("(")[1].split(")")[0]
-                inner_statements, i = parse_block(lines, i+1)
-                statements.append({
-                    "name": "if",
-                    "condition": condition,
-                    "statements": inner_statements
-                })
+                inner_statements, i = parse_block(lines, i + 1)
+                statements.append({"name": "if", "condition": condition, "statements": inner_statements})
             i += 1
     return statements, i
+
 
 # Example usage
 code = """

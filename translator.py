@@ -17,9 +17,7 @@ def parse_code(code):
         elif line.startswith("if"):
             condition = line.split("(")[1].split(")")[0]
             inner_statements, i = parse_block(lines, i + 1)
-            statements.append(
-                {"name": "if", "condition": condition, "statements": inner_statements}
-            )
+            statements.append({"name": "if", "condition": condition, "statements": inner_statements})
         elif line.startswith("{") or line.endswith("}"):
             i += 1
         else:
@@ -77,9 +75,7 @@ def check_brakes(code):
         elif char in closing_braces:
             assert stack, f"Unexpected closing brace '{char}' at line {line_count}"
             top = stack.pop()
-            assert (
-                brace_pairs[top[0]] == char
-            ), f"Mismatched braces '{top[0]}' and '{char}' at line {line_count}"
+            assert brace_pairs[top[0]] == char, f"Mismatched braces '{top[0]}' and '{char}' at line {line_count}"
     assert not stack, f"Unclosed brace '{stack[-1][0]}' at line {stack[-1][1]}"
     return True
 
@@ -87,6 +83,7 @@ def check_brakes(code):
 def text2sentences(text):
     check_brakes(text)
     return parse_code(text)
+
 
 code = """
 char c = input();
