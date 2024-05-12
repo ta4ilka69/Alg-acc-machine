@@ -1,5 +1,4 @@
 import json
-from collections import namedtuple
 from enum import Enum
 
 MEMORY_SIZE = 4096 # could be 2**27
@@ -11,7 +10,7 @@ OUTPUT_PORT_ADDRESS = 1
 
 
 
-class Opcode(str,namedtuple):
+class Opcode(str,Enum):
     ADD = 'add'
     SUB = 'sub'
     MUL = 'mul'
@@ -30,7 +29,7 @@ class Opcode(str,namedtuple):
     def __str__(self):
         return self.value
 
-class AddressingMode(str,namedtuple):
+class AddressingMode(str,Enum):
     DIRECT = 'direct'
     ABSOLUTE = 'absolute'
     RELATIVE = 'relative'
