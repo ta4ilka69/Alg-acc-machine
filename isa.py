@@ -11,44 +11,42 @@ OUTPUT_PORT_ADDRESS = 1
 
 
 class Opcode(str,Enum):
-    ADD = 'add'
-    SUB = 'sub'
-    MUL = 'mul'
-    DIV = 'div'
-    MOD = 'mod'
-    LD = 'load'
-    ST = 'store'
-    INC = 'increment'
-    DEC = 'decrement'
-    JMP = 'jump'
-    JZ = 'jz'
-    JNZ = 'jnz'
-    HLT = 'halt'
-    IN = 'input'
-    OUT = 'output'
+    ADD = "add"
+    SUB = "sub"
+    MUL = "mul"
+    DIV = "div"
+    MOD = "mod"
+    LD = "load"
+    ST = "store"
+    INC = "increment"
+    DEC = "decrement"
+    JMP = "jump"
+    JZ = "jz"
+    JNZ = "jnz"
+    HLT = "halt"
+    IN = "input"
+    OUT = "output"
     def __str__(self):
         return self.value
 
 class AddressingMode(str,Enum):
-    DIRECT = 'direct'
-    ABSOLUTE = 'absolute'
-    RELATIVE = 'relative'
+    DIRECT = "direct"
+    ABSOLUTE = "absolute"
+    RELATIVE = "relative"
 
     def __str__(self):
         return self.value
 
 def write_code(code, filename):
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         buffer = []
         for instruction in code:
             buffer.append(json.dump(instruction))
-        f.write('\n'.join(buffer))
-    
+        f.write("\n".join(buffer))
 def read_code(filename):
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         code = json.loads(f.read())
     for instr in code:
         instr["opcode"] = Opcode(instr["opcode"])
         instr["addressing_mode"] = AddressingMode(instr["addressing_mode"])
     return code
-    

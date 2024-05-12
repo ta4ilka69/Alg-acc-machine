@@ -1,26 +1,26 @@
 def parse_code(code):
     statements = []
-    lines = code.strip().split('\n')
+    lines = code.strip().split("\n")
     i = 0
     while i < len(lines):
         line = lines[i].strip()
-        if line.startswith('while'):
-            condition = line.split('(')[1].split(')')[0]
+        if line.startswith("while"):
+            condition = line.split("(")[1].split(")")[0]
             inner_statements, i = parse_block(lines, i+1)
             statements.append({
-                'name': 'while',
-                'condition': condition,
-                'statements': inner_statements
+                "name": "while",
+                "condition": condition,
+                "statements": inner_statements
             })
-        elif line.startswith('if'):
-            condition = line.split('(')[1].split(')')[0]
+        elif line.startswith("if"):
+            condition = line.split("(")[1].split(")")[0]
             inner_statements, i = parse_block(lines, i+1)
             statements.append({
-                'name': 'if',
-                'condition': condition,
-                'statements': inner_statements
+                "name": "if",
+                "condition": condition,
+                "statements": inner_statements
             })
-        elif line.startswith('{') or line.endswith('}'):
+        elif line.startswith("{") or line.endswith("}"):
             i += 1
         else:
             statements.append(line)
@@ -32,28 +32,28 @@ def parse_block(lines, start_index):
     i = start_index
     while i < len(lines):
         line = lines[i].strip()
-        if line.endswith(';'):
+        if line.endswith(";"):
             statements.append(line[:-1])  # Removing the ending semicolon
             i += 1
-        elif line.startswith('}'):
+        elif line.startswith("}"):
             break
         else:
             # Nested control flow structure
-            if line.startswith('while'):
-                condition = line.split('(')[1].split(')')[0]
+            if line.startswith("while"):
+                condition = line.split("(")[1].split(")")[0]
                 inner_statements, i = parse_block(lines, i+1)
                 statements.append({
-                    'name': 'while',
-                    'condition': condition,
-                    'statements': inner_statements
+                    "name": "while",
+                    "condition": condition,
+                    "statements": inner_statements
                 })
-            elif line.startswith('if'):
-                condition = line.split('(')[1].split(')')[0]
+            elif line.startswith("if"):
+                condition = line.split("(")[1].split(")")[0]
                 inner_statements, i = parse_block(lines, i+1)
                 statements.append({
-                    'name': 'if',
-                    'condition': condition,
-                    'statements': inner_statements
+                    "name": "if",
+                    "condition": condition,
+                    "statements": inner_statements
                 })
             i += 1
     return statements, i
@@ -66,7 +66,7 @@ int b = a*5+6/2-3%2;
 while(c){
     print(c);
     c = input();
-    if(c == 'q'){
+    if(c == "q"){
         break;
     }
 }

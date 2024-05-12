@@ -1,18 +1,3 @@
-import sys
-
-from isa import (
-    Opcode,
-    AddressingMode,
-    MEMORY_SIZE,
-    MAX_INT,
-    MIN_INT,
-    TEMPORARY_MEMORY_ADDRESS,
-    INPUT_PORT_ADDRESS,
-    OUTPUT_PORT_ADDRESS,
-    write_code,
-)
-
-
 def parse_code(code):
     statements = []
     lines = code.strip().split("\n")
@@ -102,7 +87,6 @@ def check_brakes(code):
 def text2sentences(text):
     check_brakes(text)
     return parse_code(text)
-    
 
 code = """
 char c = input();
