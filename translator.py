@@ -23,6 +23,10 @@ def parse_code(code):
             condition = line.split("(")[1].split(")")[0]
             inner_statements, i = parse_block(lines, i + 1)
             statements.append({"name": "if", "condition": condition, "statements": inner_statements})
+        elif line.startswith("print"):
+            sentence = line.split("(")[1].split(")")[0]
+            statements.append({"name": "print", "sentence": sentence})
+            i += 1
         elif line.startswith("{") or line.endswith("}"):
             i += 1
         else:
@@ -36,7 +40,7 @@ def parse_block(lines, start_index):
     i = start_index
     while i < len(lines):
         line = lines[i].strip()
-        if line.endswith(";"):
+        if line.endswith(";") and not line.startswith("print"):
             statements.append(line[:-1])
             i += 1
         elif line.startswith("}"):
@@ -62,7 +66,13 @@ def parse_block(lines, start_index):
                         "statements": inner_statements,
                     }
                 )
-            i += 1
+            elif line.startswith("print"):
+                sentence = line.split("(")[1].split(")")[0]
+                statements.append({"name": "print", "sentence": sentence})
+                i += 1
+            else:
+                statements.append(line)
+                i += 1
     return statements, i
 
 
@@ -186,7 +196,6 @@ def translate_expression(expression, data, code, next_available_memory):  # noqa
                 {
                     "opcode": Opcode.ST,
                     "arg": stack_last,
-                    "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
@@ -204,7 +213,6 @@ def translate_expression(expression, data, code, next_available_memory):  # noqa
                 {
                     "opcode": Opcode.ST,
                     "arg": stack_last,
-                    "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
@@ -222,7 +230,6 @@ def translate_expression(expression, data, code, next_available_memory):  # noqa
                 {
                     "opcode": Opcode.ST,
                     "arg": stack_last,
-                    "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
@@ -256,7 +263,6 @@ def translate_string(code, data, sentence, next_available_memory):
                 {
                     "opcode": Opcode.ST,
                     "arg": data[variable_name],
-                    "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
@@ -282,28 +288,74 @@ def translate_string(code, data, sentence, next_available_memory):
                 {
                     "opcode": Opcode.ST,
                     "arg": data[variable_name],
-                    "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
         return code, data, next_available_memory
-    return translate_expression(parts[0].strip().split()[0], data, code, next_available_memory)
+    variable_name = variable_type
+
+    if len(parts) == 1:
+        return translate_expression(variable_name, data, code, next_available_memory)
+    assert variable_name in data, f"Variable {variable_name} not found"
+    expression = parts[1].strip()
+    if "input()" in expression:
+        code.append(
+            {
+                "opcode": Opcode.IN,
+                "index": len(code),
+            }
+        )
+    else:
+        code, data, next_available_memory = translate_expression(expression, data, code, next_available_memory)
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+    code.append(
+        {
+            "opcode": Opcode.ST,
+            "arg": data[variable_name],
+            "index": len(code),
+        }
+    )
+    return code, data, next_available_memory
 
 
 def translate_while(code, data, sentence, next_available_memory, jump_stack):
     condition, sentences = sentence["condition"], sentence["statements"]
+    start = len(code)
     if condition.startswith("!"):
         code, data, next_available_memory = translate_string(code, data, condition[1:], next_available_memory)
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
         code.append({"opcode": Opcode.JNZ, "index": len(code)})
     else:
         code, data, next_available_memory = translate_string(code, data, condition, next_available_memory)
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
         code.append({"opcode": Opcode.JZ, "index": len(code)})
     jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
         code, data, next_available_memory, jump_stack = translate_sentence(
             code, data, sentence_deep, next_available_memory, jump_stack
         )
-    code.append({"opcode": Opcode.JMP, "arg": jump_stack[-1], "index": len(code)})
+    code.append({"opcode": Opcode.JMP, "arg": start, "index": len(code)})
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
     return code, data, next_available_memory, jump_stack
@@ -313,10 +365,26 @@ def translate_if(code, data, sentence, next_available_memory, jump_stack):
     condition, sentences = sentence["condition"], sentence["statements"]
     if condition.startswith("!"):
         code, data, next_available_memory = translate_string(code, data, condition[1:], next_available_memory)
-        code.append({"opcode": Opcode.JNZ, "arg": len(code) + 2, "index": len(code)})
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+        code.append({"opcode": Opcode.JZ, "arg": len(code) + 2, "index": len(code)})
     else:
         code, data, next_available_memory = translate_string(code, data, condition, next_available_memory)
-        code.append({"opcode": Opcode.JZ, "arg": len(code) + 2, "index": len(code)})
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+        code.append({"opcode": Opcode.JNZ, "arg": len(code) + 2, "index": len(code)})
     code.append({"opcode": Opcode.JMP, "index": len(code)})
     jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
@@ -326,6 +394,143 @@ def translate_if(code, data, sentence, next_available_memory, jump_stack):
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
     return code, data, next_available_memory, jump_stack
+
+
+def translate_print_arg(code, data, sentence, next_available_memory):
+    if (sentence.startswith('"') and sentence.endswith('"')) or (sentence.startswith("'") and sentence.endswith("'")):
+        ind = len(data["print"])
+        sentence = sentence[1:-1]
+        data["print"].append({"start": next_available_memory, "chars": [len(sentence)]})
+        next_available_memory += 1
+        for char in sentence:
+            data["print"][ind]["chars"].append(char)
+            next_available_memory += 1
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": data["print"][ind]["start"] + 1,
+                "addressing_mode": AddressingMode.DIRECT,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.ST,
+                "arg": TEMPORARY_MEMORY_ADDRESS - 1,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": data["print"][ind]["start"],
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.ST,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "index": len(code),
+            }
+        )
+        start = len(code)
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": start,
+            }
+        )
+        jz = len(code)
+        code.append(
+            {
+                "opcode": Opcode.JZ,
+                "index": jz,
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS - 1,
+                "addressing_mode": AddressingMode.RELATIVE,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.OUT,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS - 1,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.INC,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.ST,
+                "arg": TEMPORARY_MEMORY_ADDRESS - 1,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.LD,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "addressing_mode": AddressingMode.ABSOLUTE,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.DEC,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.ST,
+                "arg": TEMPORARY_MEMORY_ADDRESS,
+                "index": len(code),
+            }
+        )
+        code.append(
+            {
+                "opcode": Opcode.JMP,
+                "arg": start,
+                "index": len(code),
+            }
+        )
+        code[jz]["arg"] = len(code)
+        return code, data, next_available_memory
+    code, data, next_available_memory = translate_expression(sentence, data, code, next_available_memory)
+    code.append(
+        {
+            "opcode": Opcode.LD,
+            "arg": TEMPORARY_MEMORY_ADDRESS,
+            "addressing_mode": AddressingMode.ABSOLUTE,
+            "index": len(code),
+        }
+    )
+    code.append({"opcode": Opcode.OUT, "index": len(code)})
+    return code, data, next_available_memory
+
+
+def translate_print(code, data, sentence, next_available_memory):
+    return translate_print_arg(code, data, sentence, next_available_memory)
 
 
 def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
@@ -340,13 +545,15 @@ def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
             code, data, next_available_memory, jump_stack = translate_if(
                 code, data, sentence, next_available_memory, jump_stack
             )
+        elif sentence["name"] == "print":
+            code, data, next_available_memory = translate_print(code, data, sentence["sentence"], next_available_memory)
     return code, data, next_available_memory, jump_stack
 
 
 def translate(text):
     sentences = text2sentences(text)
     code = []
-    data = {}
+    data = {"print": []}
     jump_stack = []
     next_available_memory = 0
     for sentence in sentences:
@@ -361,13 +568,13 @@ def main(source, target):
     with open(source) as f:
         source = f.read()
     code = translate(source)
-    write_code(target, code)
+    write_code(code,target)
     print("source LoC:", len(source.split("\n")), "code instr:", len(code))
 
 
 if __name__ == "__main__":
-    # assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
-    # _, source, target = sys.argv
+    assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
+    _, source, target = sys.argv
     source = "./examples/test.js"
     target = "output.txt"
     main(source, target)

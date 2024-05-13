@@ -42,10 +42,21 @@ class AddressingMode(str, Enum):
 
 def write_code(code, filename):
     with open(filename, "w") as f:
-        buffer = []
         for instruction in code:
-            buffer.append(json.dump(instruction))
-        f.write("\n".join(buffer))
+            opcode = instruction["opcode"].name
+            line = f"{opcode}"
+            if "arg" in instruction:
+                arg = instruction["arg"]
+                if "addressing_mode" in instruction:
+                    addressing_mode = instruction["addressing_mode"].name
+                    line += f" {arg} {addressing_mode}" 
+                else:
+                    line += f" {arg}"
+
+            if "index" in instruction:
+                line += f" ; index: {instruction['index']}"
+
+            f.write(line + "\n")
 
 
 def read_code(filename):
@@ -55,3 +66,14 @@ def read_code(filename):
         instr["opcode"] = Opcode(instr["opcode"])
         instr["addressing_mode"] = AddressingMode(instr["addressing_mode"])
     return code
+
+# All data is 0 except strings
+def write_data(data, filename):
+    with open(filename, "w") as f:
+        buffer = []
+        for d in data:
+            if isinstance(d, str):
+                buffer.append(d)
+            else:
+                buffer.append("0")
+        f.write("\n".join(buffer))
