@@ -1,0 +1,8 @@
+in_source: |-
+  char c = input();
+  while (c){
+      print(c);
+      c = input();
+  }
+in_stdin: |-
+  it's a cat

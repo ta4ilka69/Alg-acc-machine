@@ -1,0 +1,4 @@
+in_source: |-
+  print("hello world!");
+in_stdin: |-
+  something

@@ -229,7 +229,7 @@ def _handle_input(code, data, variable_name):
     return code, data
 
 
-def translate_string(code, data, sentence, next_available_memory):
+def translate_string(code, data, sentence, next_available_memory):  # noqa: C901
     parts = sentence.replace(";", "").split("=")
     variable_type = parts[0].strip().split()[0]
 
@@ -519,8 +519,8 @@ def main(source, target):
 
 
 if __name__ == "__main__":
-    # assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
-    # _, source, target = sys.argv
+    assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
+    _, source, target = sys.argv
     source = "./examples/hello_user_alg.js"
     target = "./examples/hello_user_alg_out.txt"
     main(source, target)
