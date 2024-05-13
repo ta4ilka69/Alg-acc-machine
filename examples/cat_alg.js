@@ -1,6 +1,5 @@
 char c = input();
-while (c)
-{
+while (c){
     print(c);
     c = input();
 }

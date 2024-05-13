@@ -14,8 +14,65 @@
 {"opcode": "sub", "arg": 4094, "addressing_mode": "absolute", "index": 13}
 {"opcode": "store", "arg": 4095, "index": 14}
 {"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 15}
-{"opcode": "jz", "index": 16, "arg": 18}
-{"opcode": "jump", "arg": 8, "index": 17}
-{"opcode": "halt", "index": 18}
+{"opcode": "jz", "index": 16, "arg": 75}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 17}
+{"opcode": "store", "arg": 4095, "index": 18}
+{"opcode": "load", "arg": 5, "addressing_mode": "direct", "index": 19}
+{"opcode": "store", "arg": 4094, "index": 20}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 21}
+{"opcode": "mod", "arg": 4094, "addressing_mode": "absolute", "index": 22}
+{"opcode": "store", "arg": 4095, "index": 23}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 24}
+{"opcode": "jz", "arg": 27, "index": 25}
+{"opcode": "jump", "index": 26, "arg": 36}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 27}
+{"opcode": "store", "arg": 4095, "index": 28}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 29}
+{"opcode": "store", "arg": 4094, "index": 30}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 31}
+{"opcode": "add", "arg": 4094, "addressing_mode": "absolute", "index": 32}
+{"opcode": "store", "arg": 4095, "index": 33}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 34}
+{"opcode": "store", "arg": 0, "index": 35}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 36}
+{"opcode": "store", "arg": 4095, "index": 37}
+{"opcode": "load", "arg": 5, "addressing_mode": "direct", "index": 38}
+{"opcode": "store", "arg": 4094, "index": 39}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 40}
+{"opcode": "mod", "arg": 4094, "addressing_mode": "absolute", "index": 41}
+{"opcode": "store", "arg": 4095, "index": 42}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 43}
+{"opcode": "jnz", "arg": 46, "index": 44}
+{"opcode": "jump", "index": 45, "arg": 65}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 46}
+{"opcode": "store", "arg": 4095, "index": 47}
+{"opcode": "load", "arg": 3, "addressing_mode": "direct", "index": 48}
+{"opcode": "store", "arg": 4094, "index": 49}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 50}
+{"opcode": "mod", "arg": 4094, "addressing_mode": "absolute", "index": 51}
+{"opcode": "store", "arg": 4095, "index": 52}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 53}
+{"opcode": "jz", "arg": 56, "index": 54}
+{"opcode": "jump", "index": 55, "arg": 65}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 56}
+{"opcode": "store", "arg": 4095, "index": 57}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 58}
+{"opcode": "store", "arg": 4094, "index": 59}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 60}
+{"opcode": "add", "arg": 4094, "addressing_mode": "absolute", "index": 61}
+{"opcode": "store", "arg": 4095, "index": 62}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 63}
+{"opcode": "store", "arg": 0, "index": 64}
+{"opcode": "load", "arg": 1, "addressing_mode": "absolute", "index": 65}
+{"opcode": "store", "arg": 4095, "index": 66}
+{"opcode": "load", "arg": 1, "addressing_mode": "direct", "index": 67}
+{"opcode": "store", "arg": 4094, "index": 68}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 69}
+{"opcode": "add", "arg": 4094, "addressing_mode": "absolute", "index": 70}
+{"opcode": "store", "arg": 4095, "index": 71}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 72}
+{"opcode": "store", "arg": 1, "index": 73}
+{"opcode": "jump", "arg": 8, "index": 74}
+{"opcode": "halt", "index": 75}
 
 {"data": []}

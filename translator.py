@@ -42,39 +42,26 @@ def parse_block(lines, start_index):
     i = start_index
     while i < len(lines):
         line = lines[i].strip()
-        if line.endswith(";") and not line.startswith("print"):
-            statements.append(line[:-1])
+        if line.startswith("while") or line.startswith("if"):
+            condition = line.split("(")[1].split(")")[0]
+            inner_statements, i = parse_block(lines, i + 1)
+            statements.append(
+                {
+                    "name": "if" if line.split()[0].startswith("if") else "while",
+                    "condition": condition,
+                    "statements": inner_statements,
+                }
+            )
+        elif line.startswith("print"):
+            sentence = line.split("(")[1].split(")")[0]
+            statements.append({"name": "print", "sentence": sentence})
             i += 1
         elif line.startswith("}"):
+            i += 1
             break
         else:
-            if line.startswith("while"):
-                condition = line.split("(")[1].split(")")[0]
-                inner_statements, i = parse_block(lines, i + 1)
-                statements.append(
-                    {
-                        "name": "while",
-                        "condition": condition,
-                        "statements": inner_statements,
-                    }
-                )
-            elif line.startswith("if"):
-                condition = line.split("(")[1].split(")")[0]
-                inner_statements, i = parse_block(lines, i + 1)
-                statements.append(
-                    {
-                        "name": "if",
-                        "condition": condition,
-                        "statements": inner_statements,
-                    }
-                )
-            elif line.startswith("print"):
-                sentence = line.split("(")[1].split(")")[0]
-                statements.append({"name": "print", "sentence": sentence})
-                i += 1
-            else:
-                statements.append(line)
-                i += 1
+            statements.append(line)
+            i += 1
     return statements, i
 
 
@@ -102,11 +89,10 @@ def text2sentences(text):
     return parse_code(text)
 
 
-def translate_expression_to_polish(expression):
+def translate_expression_to_polish(expression):  # noqa: C901
     output = []
     operator_stack = []
     precedence = {"+": 1, "-": 1, "*": 2, "/": 2, "%": 2}
-
     i = 0
     while i < len(expression):
         char = expression[i]
@@ -492,7 +478,7 @@ def translate_print(code, data, sentence, next_available_memory):
 
 
 def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
-    if isinstance(sentence, str):
+    if isinstance(sentence, str) and sentence not in ["", "{", "}"]:
         code, data, next_available_memory = translate_string(code, data, sentence, next_available_memory)
     elif isinstance(sentence, dict):
         if sentence["name"] == "while":
@@ -515,6 +501,8 @@ def translate(text):
     jump_stack = []
     next_available_memory = 0
     for sentence in sentences:
+        if sentence in ["", "{", "}"]:
+            continue
         code, data, next_available_memory, jump_stack = translate_sentence(
             code, data, sentence, next_available_memory, jump_stack
         )
@@ -533,6 +521,6 @@ def main(source, target):
 if __name__ == "__main__":
     # assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
     # _, source, target = sys.argv
-    source = "./examples/prob1.js"
-    target = "./examples/prob1_out.txt"
+    source = "./examples/hello_user_alg.js"
+    target = "./examples/hello_user_alg_out.txt"
     main(source, target)
