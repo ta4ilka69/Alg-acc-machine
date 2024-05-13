@@ -40,40 +40,30 @@ class AddressingMode(str, Enum):
         return self.value
 
 
-def write_code(code, filename):
+def write_code(code, data, filename):
     with open(filename, "w") as f:
         for instruction in code:
-            opcode = instruction["opcode"].name
-            line = f"{opcode}"
-            if "arg" in instruction:
-                arg = instruction["arg"]
-                if "addressing_mode" in instruction:
-                    addressing_mode = instruction["addressing_mode"].name
-                    line += f" {arg} {addressing_mode}" 
-                else:
-                    line += f" {arg}"
-
-            if "index" in instruction:
-                line += f" ; index: {instruction['index']}"
-
-            f.write(line + "\n")
+            f.write(json.dumps(instruction) + "\n")
+        f.write("\n")
+        f.write(json.dumps({"data": data}) + "\n")
 
 
 def read_code(filename):
+    code = []
+    data = []
     with open(filename) as f:
-        code = json.loads(f.read())
-    for instr in code:
-        instr["opcode"] = Opcode(instr["opcode"])
-        instr["addressing_mode"] = AddressingMode(instr["addressing_mode"])
-    return code
+        for line in f:
+            line = line.strip()
+            if line:
+                try:
+                    instruction = json.loads(line)
+                    instruction["opcode"] = Opcode(instruction["opcode"])
+                    if "addressing_mode" in instruction:
+                        instruction["addressing_mode"] = AddressingMode(instruction["addressing_mode"])
 
-# All data is 0 except strings
-def write_data(data, filename):
-    with open(filename, "w") as f:
-        buffer = []
-        for d in data:
-            if isinstance(d, str):
-                buffer.append(d)
-            else:
-                buffer.append("0")
-        f.write("\n".join(buffer))
+                    code.append(instruction)
+                except json.JSONDecodeError:
+                    data_dict = json.loads(line)
+                    data = data_dict.get("data", [])
+
+    return code, data

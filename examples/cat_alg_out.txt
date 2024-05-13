@@ -1,0 +1,16 @@
+{"opcode": "input", "index": 0}
+{"opcode": "store", "arg": 0, "index": 1}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 2}
+{"opcode": "store", "arg": 4095, "index": 3}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 4}
+{"opcode": "jz", "index": 5, "arg": 13}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 6}
+{"opcode": "store", "arg": 4095, "index": 7}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 8}
+{"opcode": "output", "index": 9}
+{"opcode": "input", "index": 10}
+{"opcode": "store", "arg": 0, "index": 11}
+{"opcode": "jump", "arg": 2, "index": 12}
+{"opcode": "halt", "index": 13}
+
+{"data": []}

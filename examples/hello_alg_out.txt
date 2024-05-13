@@ -1,0 +1,18 @@
+{"opcode": "load", "arg": 1, "addressing_mode": "direct", "index": 0}
+{"opcode": "store", "arg": 4094, "index": 1}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 2}
+{"opcode": "store", "arg": 4095, "index": 3}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 4}
+{"opcode": "jz", "index": 5, "arg": 15}
+{"opcode": "load", "arg": 4094, "addressing_mode": "relative", "index": 6}
+{"opcode": "output", "index": 7}
+{"opcode": "load", "arg": 4094, "addressing_mode": "absolute", "index": 8}
+{"opcode": "increment", "index": 9}
+{"opcode": "store", "arg": 4094, "index": 10}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 11}
+{"opcode": "decrement", "index": 12}
+{"opcode": "store", "arg": 4095, "index": 13}
+{"opcode": "jump", "arg": 4, "index": 14}
+{"opcode": "halt", "index": 15}
+
+{"data": [{"start": 0, "chars": [12, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33]}]}
