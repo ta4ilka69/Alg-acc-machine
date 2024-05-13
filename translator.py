@@ -227,63 +227,67 @@ def translate_expression(expression, data, code, next_available_memory):  # noqa
                 }
             )
             stack_last -= 1
-    return data, code, next_available_memory
+    return code, data, next_available_memory
 
 
 def translate_string(code, data, sentence, next_available_memory):
     parts = sentence.replace(";", "").split("=")
     variable_type = parts[0].strip().split()[0]
-    variable_name = parts[0].strip().split()[1]
-    assert variable_type in ["int", "char"], f"Invalid data type: {variable_type}"
-    if variable_name not in data:
-        data[variable_name] = next_available_memory
-        next_available_memory += 1
-    if variable_type == "int":
-        expression = parts[1].strip()
-        data, code, next_available_memory = translate_expression(expression, data, code, next_available_memory)
-        code.append(
-            {
-                "opcode": Opcode.LD,
-                "arg": TEMPORARY_MEMORY_ADDRESS,
-                "addressing_mode": AddressingMode.ABSOLUTE,
-                "index": len(code),
-            }
-        )
-        code.append(
-            {
-                "opcode": Opcode.ST,
-                "arg": data[variable_name],
-                "addressing_mode": AddressingMode.ABSOLUTE,
-                "index": len(code),
-            }
-        )
-    elif variable_type == "char":
-        assert "input()" in parts[1] or parts[1].strip() in data, f"Unsupported operation for char type: {sentence}"
-        if "input()" in parts[1]:
-            code.append(
-                {
-                    "opcode": Opcode.IN,
-                    "index": len(code),
-                }
-            )
-        else:
+    if len(parts[0].strip().split()) > 1:
+        variable_name = parts[0].strip().split()[1]
+        assert variable_type in ["int", "char"], f"Invalid data type: {variable_type}"
+        if variable_name not in data:
+            data[variable_name] = next_available_memory
+            next_available_memory += 1
+        if len(parts) == 1:
+            return code, data, next_available_memory
+        if variable_type == "int":
+            expression = parts[1].strip()
+            code, data, next_available_memory = translate_expression(expression, data, code, next_available_memory)
             code.append(
                 {
                     "opcode": Opcode.LD,
-                    "arg": data[parts[1].strip()],
+                    "arg": TEMPORARY_MEMORY_ADDRESS,
                     "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
             )
-        code.append(
-            {
-                "opcode": Opcode.ST,
-                "arg": data[variable_name],
-                "addressing_mode": AddressingMode.ABSOLUTE,
-                "index": len(code),
-            }
-        )
-    return code, data, next_available_memory
+            code.append(
+                {
+                    "opcode": Opcode.ST,
+                    "arg": data[variable_name],
+                    "addressing_mode": AddressingMode.ABSOLUTE,
+                    "index": len(code),
+                }
+            )
+        elif variable_type == "char":
+            assert "input()" in parts[1] or parts[1].strip() in data, f"Unsupported operation for char type: {sentence}"
+            if "input()" in parts[1]:
+                code.append(
+                    {
+                        "opcode": Opcode.IN,
+                        "index": len(code),
+                    }
+                )
+            else:
+                code.append(
+                    {
+                        "opcode": Opcode.LD,
+                        "arg": data[parts[1].strip()],
+                        "addressing_mode": AddressingMode.ABSOLUTE,
+                        "index": len(code),
+                    }
+                )
+            code.append(
+                {
+                    "opcode": Opcode.ST,
+                    "arg": data[variable_name],
+                    "addressing_mode": AddressingMode.ABSOLUTE,
+                    "index": len(code),
+                }
+            )
+        return code, data, next_available_memory
+    return translate_expression(parts[0].strip().split()[0], data, code, next_available_memory)
 
 
 def translate_while(code, data, sentence, next_available_memory, jump_stack):
@@ -296,10 +300,13 @@ def translate_while(code, data, sentence, next_available_memory, jump_stack):
         code.append({"opcode": Opcode.JZ, "index": len(code)})
     jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
-        code, data, next_available_memory = translate_sentence(code, data, sentence_deep, jump_stack)
+        code, data, next_available_memory, jump_stack = translate_sentence(
+            code, data, sentence_deep, next_available_memory, jump_stack
+        )
     code.append({"opcode": Opcode.JMP, "arg": jump_stack[-1], "index": len(code)})
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
+    return code, data, next_available_memory, jump_stack
 
 
 def translate_if(code, data, sentence, next_available_memory, jump_stack):
@@ -313,9 +320,12 @@ def translate_if(code, data, sentence, next_available_memory, jump_stack):
     code.append({"opcode": Opcode.JMP, "index": len(code)})
     jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
-        code, data, next_available_memory = translate_sentence(code, data, sentence_deep, jump_stack)
+        code, data, next_available_memory, jump_stack = translate_sentence(
+            code, data, sentence_deep, next_available_memory, jump_stack
+        )
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
+    return code, data, next_available_memory, jump_stack
 
 
 def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
@@ -330,7 +340,7 @@ def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
             code, data, next_available_memory, jump_stack = translate_if(
                 code, data, sentence, next_available_memory, jump_stack
             )
-    return code, data, next_available_memory
+    return code, data, next_available_memory, jump_stack
 
 
 def translate(text):
