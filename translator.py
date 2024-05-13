@@ -131,7 +131,7 @@ def translate_expression(expression, data, code, next_available_memory):  # noqa
             code.append(
                 {
                     "opcode": Opcode.LD,
-                    "arg": stack_last+1,
+                    "arg": stack_last + 1,
                     "addressing_mode": AddressingMode.ABSOLUTE,
                     "index": len(code),
                 }
@@ -285,44 +285,51 @@ def translate_string(code, data, sentence, next_available_memory):
         )
     return code, data, next_available_memory
 
+
 def translate_while(code, data, sentence, next_available_memory, jump_stack):
     condition, sentences = sentence["condition"], sentence["statements"]
-    if(condition.startswith("!")):
-        code, data, next_available_memory = translate_string(code,data,condition[1:], next_available_memory)
+    if condition.startswith("!"):
+        code, data, next_available_memory = translate_string(code, data, condition[1:], next_available_memory)
         code.append({"opcode": Opcode.JNZ, "index": len(code)})
     else:
-        code, data, next_available_memory = translate_string(code,data,condition, next_available_memory)
+        code, data, next_available_memory = translate_string(code, data, condition, next_available_memory)
         code.append({"opcode": Opcode.JZ, "index": len(code)})
-    jump_stack.append(len(code)-1)
+    jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
         code, data, next_available_memory = translate_sentence(code, data, sentence_deep, jump_stack)
     code.append({"opcode": Opcode.JMP, "arg": jump_stack[-1], "index": len(code)})
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
 
+
 def translate_if(code, data, sentence, next_available_memory, jump_stack):
     condition, sentences = sentence["condition"], sentence["statements"]
-    if(condition.startswith("!")):
-        code, data, next_available_memory = translate_string(code,data,condition[1:], next_available_memory)
-        code.append({"opcode": Opcode.JNZ, "arg": len(code)+2,"index": len(code)})
+    if condition.startswith("!"):
+        code, data, next_available_memory = translate_string(code, data, condition[1:], next_available_memory)
+        code.append({"opcode": Opcode.JNZ, "arg": len(code) + 2, "index": len(code)})
     else:
-        code, data, next_available_memory = translate_string(code,data,condition, next_available_memory)
-        code.append({"opcode": Opcode.JZ, "arg": len(code)+2,"index": len(code)})
+        code, data, next_available_memory = translate_string(code, data, condition, next_available_memory)
+        code.append({"opcode": Opcode.JZ, "arg": len(code) + 2, "index": len(code)})
     code.append({"opcode": Opcode.JMP, "index": len(code)})
-    jump_stack.append(len(code)-1)
+    jump_stack.append(len(code) - 1)
     for sentence_deep in sentences:
         code, data, next_available_memory = translate_sentence(code, data, sentence_deep, jump_stack)
     code[jump_stack[-1]]["arg"] = len(code)
     jump_stack.pop()
+
 
 def translate_sentence(code, data, sentence, next_available_memory, jump_stack):
     if isinstance(sentence, str):
         code, data, next_available_memory = translate_string(code, data, sentence, next_available_memory)
     elif isinstance(sentence, dict):
         if sentence["name"] == "while":
-            code, data, next_available_memory, jump_stack = translate_while(code, data, sentence, next_available_memory, jump_stack)
+            code, data, next_available_memory, jump_stack = translate_while(
+                code, data, sentence, next_available_memory, jump_stack
+            )
         elif sentence["name"] == "if":
-            code, data, next_available_memory, jump_stack = translate_if(code, data, sentence, next_available_memory, jump_stack)
+            code, data, next_available_memory, jump_stack = translate_if(
+                code, data, sentence, next_available_memory, jump_stack
+            )
     return code, data, next_available_memory
 
 
@@ -333,7 +340,9 @@ def translate(text):
     jump_stack = []
     next_available_memory = 0
     for sentence in sentences:
-        code, data, next_available_memory, jump_stack = translate_sentence(code, data, sentence, next_available_memory, jump_stack)
+        code, data, next_available_memory, jump_stack = translate_sentence(
+            code, data, sentence, next_available_memory, jump_stack
+        )
     code.append({"opcode": Opcode.HLT, "index": len(code)})
     return code
 
