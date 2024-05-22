@@ -2,3 +2,168 @@ in_source: |-
   print("hello world!");
 in_stdin: |-
   something
+out_log: |
+  DEBUG   machine:simulation    TICK:   0 PC:   0 ADDR: 0 MEM_OUT: 12 ACC:0 	load 1
+  DEBUG   machine:simulation    TICK:   1 PC:   1 ADDR: 0 MEM_OUT: 12 ACC:1 	store 4094
+  DEBUG   machine:simulation    TICK:   2 PC:   2 ADDR: 0 MEM_OUT: 12 ACC:1 	load 0
+  DEBUG   machine:simulation    TICK:   3 PC:   3 ADDR: 12 MEM_OUT: 33 ACC:12 	store 4095
+  DEBUG   machine:simulation    TICK:   4 PC:   4 ADDR: 12 MEM_OUT: 33 ACC:12 	load 4095
+  DEBUG   machine:simulation    TICK:   5 PC:   5 ADDR: 12 MEM_OUT: 33 ACC:12 	jz 15
+  DEBUG   machine:simulation    TICK:   6 PC:   6 ADDR: 12 MEM_OUT: 33 ACC:12 	load 4094
+  DEBUG   machine:simulation    TICK:   8 PC:   7 ADDR: 104 MEM_OUT: 0 ACC:104 	output
+  DEBUG   machine:simulation    TICK:   9 PC:   8 ADDR: 104 MEM_OUT: 0 ACC:104 	load 4094
+  DEBUG   machine:simulation    TICK:  10 PC:   9 ADDR: 1 MEM_OUT: 104 ACC:1 	increment
+  DEBUG   machine:simulation    TICK:  11 PC:  10 ADDR: 1 MEM_OUT: 104 ACC:2 	store 4094
+  DEBUG   machine:simulation    TICK:  12 PC:  11 ADDR: 1 MEM_OUT: 104 ACC:2 	load 4095
+  DEBUG   machine:simulation    TICK:  13 PC:  12 ADDR: 12 MEM_OUT: 33 ACC:12 	decrement
+  DEBUG   machine:simulation    TICK:  14 PC:  13 ADDR: 12 MEM_OUT: 33 ACC:11 	store 4095
+  DEBUG   machine:simulation    TICK:  15 PC:  14 ADDR: 12 MEM_OUT: 33 ACC:11 	jump 4
+  DEBUG   machine:simulation    TICK:  16 PC:   4 ADDR: 12 MEM_OUT: 33 ACC:11 	load 4095
+  DEBUG   machine:simulation    TICK:  17 PC:   5 ADDR: 11 MEM_OUT: 100 ACC:11 	jz 15
+  DEBUG   machine:simulation    TICK:  18 PC:   6 ADDR: 11 MEM_OUT: 100 ACC:11 	load 4094
+  DEBUG   machine:simulation    TICK:  20 PC:   7 ADDR: 101 MEM_OUT: 0 ACC:101 	output
+  DEBUG   machine:simulation    TICK:  21 PC:   8 ADDR: 101 MEM_OUT: 0 ACC:101 	load 4094
+  DEBUG   machine:simulation    TICK:  22 PC:   9 ADDR: 2 MEM_OUT: 101 ACC:2 	increment
+  DEBUG   machine:simulation    TICK:  23 PC:  10 ADDR: 2 MEM_OUT: 101 ACC:3 	store 4094
+  DEBUG   machine:simulation    TICK:  24 PC:  11 ADDR: 2 MEM_OUT: 101 ACC:3 	load 4095
+  DEBUG   machine:simulation    TICK:  25 PC:  12 ADDR: 11 MEM_OUT: 100 ACC:11 	decrement
+  DEBUG   machine:simulation    TICK:  26 PC:  13 ADDR: 11 MEM_OUT: 100 ACC:10 	store 4095
+  DEBUG   machine:simulation    TICK:  27 PC:  14 ADDR: 11 MEM_OUT: 100 ACC:10 	jump 4
+  DEBUG   machine:simulation    TICK:  28 PC:   4 ADDR: 11 MEM_OUT: 100 ACC:10 	load 4095
+  DEBUG   machine:simulation    TICK:  29 PC:   5 ADDR: 10 MEM_OUT: 108 ACC:10 	jz 15
+  DEBUG   machine:simulation    TICK:  30 PC:   6 ADDR: 10 MEM_OUT: 108 ACC:10 	load 4094
+  DEBUG   machine:simulation    TICK:  32 PC:   7 ADDR: 108 MEM_OUT: 0 ACC:108 	output
+  DEBUG   machine:simulation    TICK:  33 PC:   8 ADDR: 108 MEM_OUT: 0 ACC:108 	load 4094
+  DEBUG   machine:simulation    TICK:  34 PC:   9 ADDR: 3 MEM_OUT: 108 ACC:3 	increment
+  DEBUG   machine:simulation    TICK:  35 PC:  10 ADDR: 3 MEM_OUT: 108 ACC:4 	store 4094
+  DEBUG   machine:simulation    TICK:  36 PC:  11 ADDR: 3 MEM_OUT: 108 ACC:4 	load 4095
+  DEBUG   machine:simulation    TICK:  37 PC:  12 ADDR: 10 MEM_OUT: 108 ACC:10 	decrement
+  DEBUG   machine:simulation    TICK:  38 PC:  13 ADDR: 10 MEM_OUT: 108 ACC:9 	store 4095
+  DEBUG   machine:simulation    TICK:  39 PC:  14 ADDR: 10 MEM_OUT: 108 ACC:9 	jump 4
+  DEBUG   machine:simulation    TICK:  40 PC:   4 ADDR: 10 MEM_OUT: 108 ACC:9 	load 4095
+  DEBUG   machine:simulation    TICK:  41 PC:   5 ADDR: 9 MEM_OUT: 114 ACC:9 	jz 15
+  DEBUG   machine:simulation    TICK:  42 PC:   6 ADDR: 9 MEM_OUT: 114 ACC:9 	load 4094
+  DEBUG   machine:simulation    TICK:  44 PC:   7 ADDR: 108 MEM_OUT: 0 ACC:108 	output
+  DEBUG   machine:simulation    TICK:  45 PC:   8 ADDR: 108 MEM_OUT: 0 ACC:108 	load 4094
+  DEBUG   machine:simulation    TICK:  46 PC:   9 ADDR: 4 MEM_OUT: 108 ACC:4 	increment
+  DEBUG   machine:simulation    TICK:  47 PC:  10 ADDR: 4 MEM_OUT: 108 ACC:5 	store 4094
+  DEBUG   machine:simulation    TICK:  48 PC:  11 ADDR: 4 MEM_OUT: 108 ACC:5 	load 4095
+  DEBUG   machine:simulation    TICK:  49 PC:  12 ADDR: 9 MEM_OUT: 114 ACC:9 	decrement
+  DEBUG   machine:simulation    TICK:  50 PC:  13 ADDR: 9 MEM_OUT: 114 ACC:8 	store 4095
+  DEBUG   machine:simulation    TICK:  51 PC:  14 ADDR: 9 MEM_OUT: 114 ACC:8 	jump 4
+  DEBUG   machine:simulation    TICK:  52 PC:   4 ADDR: 9 MEM_OUT: 114 ACC:8 	load 4095
+  DEBUG   machine:simulation    TICK:  53 PC:   5 ADDR: 8 MEM_OUT: 111 ACC:8 	jz 15
+  DEBUG   machine:simulation    TICK:  54 PC:   6 ADDR: 8 MEM_OUT: 111 ACC:8 	load 4094
+  DEBUG   machine:simulation    TICK:  56 PC:   7 ADDR: 111 MEM_OUT: 0 ACC:111 	output
+  DEBUG   machine:simulation    TICK:  57 PC:   8 ADDR: 111 MEM_OUT: 0 ACC:111 	load 4094
+  DEBUG   machine:simulation    TICK:  58 PC:   9 ADDR: 5 MEM_OUT: 111 ACC:5 	increment
+  DEBUG   machine:simulation    TICK:  59 PC:  10 ADDR: 5 MEM_OUT: 111 ACC:6 	store 4094
+  DEBUG   machine:simulation    TICK:  60 PC:  11 ADDR: 5 MEM_OUT: 111 ACC:6 	load 4095
+  DEBUG   machine:simulation    TICK:  61 PC:  12 ADDR: 8 MEM_OUT: 111 ACC:8 	decrement
+  DEBUG   machine:simulation    TICK:  62 PC:  13 ADDR: 8 MEM_OUT: 111 ACC:7 	store 4095
+  DEBUG   machine:simulation    TICK:  63 PC:  14 ADDR: 8 MEM_OUT: 111 ACC:7 	jump 4
+  DEBUG   machine:simulation    TICK:  64 PC:   4 ADDR: 8 MEM_OUT: 111 ACC:7 	load 4095
+  DEBUG   machine:simulation    TICK:  65 PC:   5 ADDR: 7 MEM_OUT: 119 ACC:7 	jz 15
+  DEBUG   machine:simulation    TICK:  66 PC:   6 ADDR: 7 MEM_OUT: 119 ACC:7 	load 4094
+  DEBUG   machine:simulation    TICK:  68 PC:   7 ADDR: 32 MEM_OUT: 0 ACC:32 	output
+  DEBUG   machine:simulation    TICK:  69 PC:   8 ADDR: 32 MEM_OUT: 0 ACC:32 	load 4094
+  DEBUG   machine:simulation    TICK:  70 PC:   9 ADDR: 6 MEM_OUT: 32 ACC:6 	increment
+  DEBUG   machine:simulation    TICK:  71 PC:  10 ADDR: 6 MEM_OUT: 32 ACC:7 	store 4094
+  DEBUG   machine:simulation    TICK:  72 PC:  11 ADDR: 6 MEM_OUT: 32 ACC:7 	load 4095
+  DEBUG   machine:simulation    TICK:  73 PC:  12 ADDR: 7 MEM_OUT: 119 ACC:7 	decrement
+  DEBUG   machine:simulation    TICK:  74 PC:  13 ADDR: 7 MEM_OUT: 119 ACC:6 	store 4095
+  DEBUG   machine:simulation    TICK:  75 PC:  14 ADDR: 7 MEM_OUT: 119 ACC:6 	jump 4
+  DEBUG   machine:simulation    TICK:  76 PC:   4 ADDR: 7 MEM_OUT: 119 ACC:6 	load 4095
+  DEBUG   machine:simulation    TICK:  77 PC:   5 ADDR: 6 MEM_OUT: 32 ACC:6 	jz 15
+  DEBUG   machine:simulation    TICK:  78 PC:   6 ADDR: 6 MEM_OUT: 32 ACC:6 	load 4094
+  DEBUG   machine:simulation    TICK:  80 PC:   7 ADDR: 119 MEM_OUT: 0 ACC:119 	output
+  DEBUG   machine:simulation    TICK:  81 PC:   8 ADDR: 119 MEM_OUT: 0 ACC:119 	load 4094
+  DEBUG   machine:simulation    TICK:  82 PC:   9 ADDR: 7 MEM_OUT: 119 ACC:7 	increment
+  DEBUG   machine:simulation    TICK:  83 PC:  10 ADDR: 7 MEM_OUT: 119 ACC:8 	store 4094
+  DEBUG   machine:simulation    TICK:  84 PC:  11 ADDR: 7 MEM_OUT: 119 ACC:8 	load 4095
+  DEBUG   machine:simulation    TICK:  85 PC:  12 ADDR: 6 MEM_OUT: 32 ACC:6 	decrement
+  DEBUG   machine:simulation    TICK:  86 PC:  13 ADDR: 6 MEM_OUT: 32 ACC:5 	store 4095
+  DEBUG   machine:simulation    TICK:  87 PC:  14 ADDR: 6 MEM_OUT: 32 ACC:5 	jump 4
+  DEBUG   machine:simulation    TICK:  88 PC:   4 ADDR: 6 MEM_OUT: 32 ACC:5 	load 4095
+  DEBUG   machine:simulation    TICK:  89 PC:   5 ADDR: 5 MEM_OUT: 111 ACC:5 	jz 15
+  DEBUG   machine:simulation    TICK:  90 PC:   6 ADDR: 5 MEM_OUT: 111 ACC:5 	load 4094
+  DEBUG   machine:simulation    TICK:  92 PC:   7 ADDR: 111 MEM_OUT: 0 ACC:111 	output
+  DEBUG   machine:simulation    TICK:  93 PC:   8 ADDR: 111 MEM_OUT: 0 ACC:111 	load 4094
+  DEBUG   machine:simulation    TICK:  94 PC:   9 ADDR: 8 MEM_OUT: 111 ACC:8 	increment
+  DEBUG   machine:simulation    TICK:  95 PC:  10 ADDR: 8 MEM_OUT: 111 ACC:9 	store 4094
+  DEBUG   machine:simulation    TICK:  96 PC:  11 ADDR: 8 MEM_OUT: 111 ACC:9 	load 4095
+  DEBUG   machine:simulation    TICK:  97 PC:  12 ADDR: 5 MEM_OUT: 111 ACC:5 	decrement
+  DEBUG   machine:simulation    TICK:  98 PC:  13 ADDR: 5 MEM_OUT: 111 ACC:4 	store 4095
+  DEBUG   machine:simulation    TICK:  99 PC:  14 ADDR: 5 MEM_OUT: 111 ACC:4 	jump 4
+  DEBUG   machine:simulation    TICK: 100 PC:   4 ADDR: 5 MEM_OUT: 111 ACC:4 	load 4095
+  DEBUG   machine:simulation    TICK: 101 PC:   5 ADDR: 4 MEM_OUT: 108 ACC:4 	jz 15
+  DEBUG   machine:simulation    TICK: 102 PC:   6 ADDR: 4 MEM_OUT: 108 ACC:4 	load 4094
+  DEBUG   machine:simulation    TICK: 104 PC:   7 ADDR: 114 MEM_OUT: 0 ACC:114 	output
+  DEBUG   machine:simulation    TICK: 105 PC:   8 ADDR: 114 MEM_OUT: 0 ACC:114 	load 4094
+  DEBUG   machine:simulation    TICK: 106 PC:   9 ADDR: 9 MEM_OUT: 114 ACC:9 	increment
+  DEBUG   machine:simulation    TICK: 107 PC:  10 ADDR: 9 MEM_OUT: 114 ACC:10 	store 4094
+  DEBUG   machine:simulation    TICK: 108 PC:  11 ADDR: 9 MEM_OUT: 114 ACC:10 	load 4095
+  DEBUG   machine:simulation    TICK: 109 PC:  12 ADDR: 4 MEM_OUT: 108 ACC:4 	decrement
+  DEBUG   machine:simulation    TICK: 110 PC:  13 ADDR: 4 MEM_OUT: 108 ACC:3 	store 4095
+  DEBUG   machine:simulation    TICK: 111 PC:  14 ADDR: 4 MEM_OUT: 108 ACC:3 	jump 4
+  DEBUG   machine:simulation    TICK: 112 PC:   4 ADDR: 4 MEM_OUT: 108 ACC:3 	load 4095
+  DEBUG   machine:simulation    TICK: 113 PC:   5 ADDR: 3 MEM_OUT: 108 ACC:3 	jz 15
+  DEBUG   machine:simulation    TICK: 114 PC:   6 ADDR: 3 MEM_OUT: 108 ACC:3 	load 4094
+  DEBUG   machine:simulation    TICK: 116 PC:   7 ADDR: 108 MEM_OUT: 0 ACC:108 	output
+  DEBUG   machine:simulation    TICK: 117 PC:   8 ADDR: 108 MEM_OUT: 0 ACC:108 	load 4094
+  DEBUG   machine:simulation    TICK: 118 PC:   9 ADDR: 10 MEM_OUT: 108 ACC:10 	increment
+  DEBUG   machine:simulation    TICK: 119 PC:  10 ADDR: 10 MEM_OUT: 108 ACC:11 	store 4094
+  DEBUG   machine:simulation    TICK: 120 PC:  11 ADDR: 10 MEM_OUT: 108 ACC:11 	load 4095
+  DEBUG   machine:simulation    TICK: 121 PC:  12 ADDR: 3 MEM_OUT: 108 ACC:3 	decrement
+  DEBUG   machine:simulation    TICK: 122 PC:  13 ADDR: 3 MEM_OUT: 108 ACC:2 	store 4095
+  DEBUG   machine:simulation    TICK: 123 PC:  14 ADDR: 3 MEM_OUT: 108 ACC:2 	jump 4
+  DEBUG   machine:simulation    TICK: 124 PC:   4 ADDR: 3 MEM_OUT: 108 ACC:2 	load 4095
+  DEBUG   machine:simulation    TICK: 125 PC:   5 ADDR: 2 MEM_OUT: 101 ACC:2 	jz 15
+  DEBUG   machine:simulation    TICK: 126 PC:   6 ADDR: 2 MEM_OUT: 101 ACC:2 	load 4094
+  DEBUG   machine:simulation    TICK: 128 PC:   7 ADDR: 100 MEM_OUT: 0 ACC:100 	output
+  DEBUG   machine:simulation    TICK: 129 PC:   8 ADDR: 100 MEM_OUT: 0 ACC:100 	load 4094
+  DEBUG   machine:simulation    TICK: 130 PC:   9 ADDR: 11 MEM_OUT: 100 ACC:11 	increment
+  DEBUG   machine:simulation    TICK: 131 PC:  10 ADDR: 11 MEM_OUT: 100 ACC:12 	store 4094
+  DEBUG   machine:simulation    TICK: 132 PC:  11 ADDR: 11 MEM_OUT: 100 ACC:12 	load 4095
+  DEBUG   machine:simulation    TICK: 133 PC:  12 ADDR: 2 MEM_OUT: 101 ACC:2 	decrement
+  DEBUG   machine:simulation    TICK: 134 PC:  13 ADDR: 2 MEM_OUT: 101 ACC:1 	store 4095
+  DEBUG   machine:simulation    TICK: 135 PC:  14 ADDR: 2 MEM_OUT: 101 ACC:1 	jump 4
+  DEBUG   machine:simulation    TICK: 136 PC:   4 ADDR: 2 MEM_OUT: 101 ACC:1 	load 4095
+  DEBUG   machine:simulation    TICK: 137 PC:   5 ADDR: 1 MEM_OUT: 104 ACC:1 	jz 15
+  DEBUG   machine:simulation    TICK: 138 PC:   6 ADDR: 1 MEM_OUT: 104 ACC:1 	load 4094
+  DEBUG   machine:simulation    TICK: 140 PC:   7 ADDR: 33 MEM_OUT: 0 ACC:33 	output
+  DEBUG   machine:simulation    TICK: 141 PC:   8 ADDR: 33 MEM_OUT: 0 ACC:33 	load 4094
+  DEBUG   machine:simulation    TICK: 142 PC:   9 ADDR: 12 MEM_OUT: 33 ACC:12 	increment
+  DEBUG   machine:simulation    TICK: 143 PC:  10 ADDR: 12 MEM_OUT: 33 ACC:13 	store 4094
+  DEBUG   machine:simulation    TICK: 144 PC:  11 ADDR: 12 MEM_OUT: 33 ACC:13 	load 4095
+  DEBUG   machine:simulation    TICK: 145 PC:  12 ADDR: 1 MEM_OUT: 104 ACC:1 	decrement
+  DEBUG   machine:simulation    TICK: 146 PC:  13 ADDR: 1 MEM_OUT: 104 ACC:0 	store 4095
+  DEBUG   machine:simulation    TICK: 147 PC:  14 ADDR: 1 MEM_OUT: 104 ACC:0 	jump 4
+  DEBUG   machine:simulation    TICK: 148 PC:   4 ADDR: 1 MEM_OUT: 104 ACC:0 	load 4095
+  DEBUG   machine:simulation    TICK: 149 PC:   5 ADDR: 0 MEM_OUT: 12 ACC:0 	jz 15
+  DEBUG   machine:simulation    TICK: 150 PC:  15 ADDR: 0 MEM_OUT: 12 ACC:0 	halt
+  INFO    machine:simulation    output_buffer: 'hello world!'
+out_stdout: |
+  source LoC: 1 code instr: 16
+  ============================================================
+  hello world!
+  instr_counter:  138 ticks: 150
+out_code: |
+  {"opcode": "load", "arg": 1, "addressing_mode": "direct", "index": 0}
+  {"opcode": "store", "arg": 4094, "index": 1}
+  {"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 2}
+  {"opcode": "store", "arg": 4095, "index": 3}
+  {"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 4}
+  {"opcode": "jz", "index": 5, "arg": 15}
+  {"opcode": "load", "arg": 4094, "addressing_mode": "relative", "index": 6}
+  {"opcode": "output", "index": 7}
+  {"opcode": "load", "arg": 4094, "addressing_mode": "absolute", "index": 8}
+  {"opcode": "increment", "index": 9}
+  {"opcode": "store", "arg": 4094, "index": 10}
+  {"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 11}
+  {"opcode": "decrement", "index": 12}
+  {"opcode": "store", "arg": 4095, "index": 13}
+  {"opcode": "jump", "arg": 4, "index": 14}
+  {"opcode": "halt", "index": 15}
+
+  {"data": [{"start": 0, "chars": [12, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33]}]}

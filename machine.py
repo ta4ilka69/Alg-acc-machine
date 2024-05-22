@@ -17,7 +17,7 @@ class Ports:
         if sig == 0:
             if len(self.input_buffer) == 0:
                 raise EOFError()
-            self.input = self.input_buffer.pop(0)
+            self.input = ord(self.input_buffer.pop(0))
         elif sig == 1:
             self.output_buffer.append(self.output)
 
@@ -77,7 +77,7 @@ class Alu:
         self.out = self.left_in * self.right_in
 
     def divide(self):
-        self.out = self.left_in / self.right_in
+        self.out = self.left_in // self.right_in
 
     def modulo(self):
         self.out = self.left_in % self.right_in
@@ -120,7 +120,7 @@ class DataPath:
 
     def mux_left_in(self, signal):
         if signal == 0:
-            self.alu.left_in = self.ports.input
+            self.alu.left_in = int(self.ports.input)
         elif signal == 1:
             self.alu.left_in = self.acc
         else:
@@ -130,7 +130,7 @@ class DataPath:
         if signal == 0:
             self.alu.right_in = self.data_reg
         elif signal == 1:
-            self.alu.right_in = direct_load
+            self.alu.right_in = int(direct_load)
         else:
             self.alu.right_in = 0
 
@@ -328,8 +328,8 @@ def simulation(code, input_buffer, data_memory_size, data, limit):
         pass
     if instruction_counter >= limit:
         logging.warning("Limit reached")
-    logging.info("output_buffer: %s", repr("".join(data_path.ports.output_buffer)))
-    return "".join(data_path.ports.output_buffer), instruction_counter, control_unit.current_tick()
+    logging.info("output_buffer: %s", repr("".join([chr(x) for x in data_path.ports.output_buffer])))
+    return "".join([chr(x) for x in data_path.ports.output_buffer]), instruction_counter, control_unit.current_tick()
 
 
 def main(code_file, input_file):
@@ -356,9 +356,9 @@ def main(code_file, input_file):
 
 
 if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.DEBUG)
-    # assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
-    # _, code_file, input_file = sys.argv
-    code_file = "./examples/hello_user_alg_out.txt"
+    #logging.getLogger().setLevel(logging.DEBUG)
+    #assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
+    #_, code_file, input_file = sys.argv
+    code_file = "./examples/prob1_out.txt"
     input_file = "./examples/1.txt"
     main(code_file, input_file)
