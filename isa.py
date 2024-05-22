@@ -62,7 +62,7 @@ def read_code(filename):
                         instruction["addressing_mode"] = AddressingMode(instruction["addressing_mode"])
 
                     code.append(instruction)
-                except json.JSONDecodeError:
+                except KeyError:
                     data_dict = json.loads(line)
                     data = data_dict.get("data", [])
 

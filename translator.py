@@ -521,6 +521,4 @@ def main(source, target):
 if __name__ == "__main__":
     assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
     _, source, target = sys.argv
-    source = "./examples/hello_user_alg.js"
-    target = "./examples/hello_user_alg_out.txt"
     main(source, target)
