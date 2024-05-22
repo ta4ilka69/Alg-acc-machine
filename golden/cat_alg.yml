@@ -5,4 +5,4 @@ in_source: |-
       c = input();
   }
 in_stdin: |-
-  it's a cat
+  it's a cat\u0000
