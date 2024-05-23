@@ -89,34 +89,50 @@ def text2sentences(text):
     return parse_code(text)
 
 
-def translate_expression_to_polish(expression):  # noqa: C901
+def handle_operator(output, operator_stack, char):
+    precedence = {"+": 1, "-": 1, "*": 2, "/": 2, "%": 2}
+    while operator_stack and operator_stack[-1] != "(" and precedence[char] <= precedence[operator_stack[-1]]:
+        output.append(operator_stack.pop())
+    operator_stack.append(char)
+
+
+def handle_closing_parenthesis(output, operator_stack):
+    while operator_stack and operator_stack[-1] != "(":
+        output.append(operator_stack.pop())
+    operator_stack.pop()
+
+
+def handle_alphanumeric(expression, i):
+    j = i + 1
+    while j < len(expression) and expression[j].isalnum():
+        j += 1
+    return expression[i:j], j
+
+
+def translate_expression_to_polish(expression):
     output = []
     operator_stack = []
-    precedence = {"+": 1, "-": 1, "*": 2, "/": 2, "%": 2}
     i = 0
+
     while i < len(expression):
         char = expression[i]
 
         if char.isalnum():
-            j = i + 1
-            while j < len(expression) and expression[j].isalnum():
-                j += 1
-            output.append(expression[i:j])
-            i = j - 1
+            token, i = handle_alphanumeric(expression, i)
+            output.append(token)
+            i -= 1
         elif char == "(":
             operator_stack.append(char)
         elif char == ")":
-            while operator_stack[-1] != "(":
-                output.append(operator_stack.pop())
-            operator_stack.pop()
-        elif char in precedence:
-            while operator_stack and operator_stack[-1] != "(" and precedence[char] <= precedence[operator_stack[-1]]:
-                output.append(operator_stack.pop())
-            operator_stack.append(char)
+            handle_closing_parenthesis(output, operator_stack)
+        elif char in "+-*/%":
+            handle_operator(output, operator_stack, char)
+
         i += 1
 
     while operator_stack:
         output.append(operator_stack.pop())
+
     return output
 
 
@@ -229,7 +245,7 @@ def _handle_input(code, data, variable_name):
     return code, data
 
 
-def translate_string(code, data, sentence, next_available_memory):  # noqa: C901
+def translate_string(code, data, sentence, next_available_memory):
     parts = sentence.replace(";", "").split("=")
     variable_type = parts[0].strip().split()[0]
 
