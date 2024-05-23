@@ -245,43 +245,64 @@ def _handle_input(code, data, variable_name):
     return code, data
 
 
+def _process_declaration(parts, data, variable_type, next_available_memory):
+    variable_name = parts[0].strip().split()[1]
+    data, next_available_memory = _declare_variable(data, variable_name, variable_type, next_available_memory)
+    return variable_name, data, next_available_memory
+
+
+def _process_assignment_or_input(parts, variable_type, variable_name, data, code, next_available_memory):
+    if variable_type == "int":
+        expression = parts[1].strip()
+        code, data, next_available_memory = _handle_assignment(
+            code, data, variable_name, expression, next_available_memory
+        )
+    elif variable_type == "char":
+        if "input()" in parts[1]:
+            code, data = _handle_input(code, data, variable_name)
+        else:
+            assert parts[1].strip() in data, f"Unsupported operation for char type: {parts}"
+            code, data, next_available_memory = _handle_assignment(
+                code, data, variable_name, parts[1].strip(), next_available_memory
+            )
+    return code, data, next_available_memory
+
+
+def _process_existing_variable(parts, variable_name, data, code, next_available_memory):
+    expression = parts[1].strip()
+    if "input()" in expression:
+        code, data = _handle_input(code, data, variable_name)
+    else:
+        code, data, next_available_memory = _handle_assignment(
+            code, data, variable_name, expression, next_available_memory
+        )
+    return code, data, next_available_memory
+
+
 def translate_string(code, data, sentence, next_available_memory):
     parts = sentence.replace(";", "").split("=")
     variable_type = parts[0].strip().split()[0]
 
     if len(parts[0].strip().split()) > 1:
-        variable_name = parts[0].strip().split()[1]
-        data, next_available_memory = _declare_variable(data, variable_name, variable_type, next_available_memory)
-
+        variable_name, data, next_available_memory = _process_declaration(
+            parts, data, variable_type, next_available_memory
+        )
         if len(parts) == 2:
-            if variable_type == "int":
-                expression = parts[1].strip()
-                code, data, next_available_memory = _handle_assignment(
-                    code, data, variable_name, expression, next_available_memory
-                )
-            elif variable_type == "char":
-                if "input()" in parts[1]:
-                    code, data = _handle_input(code, data, variable_name)
-                else:
-                    assert parts[1].strip() in data, f"Unsupported operation for char type: {sentence}"
-                    code, data, next_available_memory = _handle_assignment(
-                        code, data, variable_name, parts[1].strip(), next_available_memory
-                    )
-
-        return code, data, next_available_memory
-
-    variable_name = variable_type
-    if len(parts) == 2:
-        assert variable_name in data, f"Variable {variable_name} not found"
-        expression = parts[1].strip()
-        if "input()" in expression:
-            code, data = _handle_input(code, data, variable_name)
-        else:
-            code, data, next_available_memory = _handle_assignment(
-                code, data, variable_name, expression, next_available_memory
+            code, data, next_available_memory = _process_assignment_or_input(
+                parts, variable_type, variable_name, data, code, next_available_memory
             )
     else:
-        code, data, next_available_memory = translate_expression(parts[0].strip(), data, code, next_available_memory)
+        variable_name = variable_type
+        if len(parts) == 2:
+            assert variable_name in data, f"Variable {variable_name} not found"
+            code, data, next_available_memory = _process_existing_variable(
+                parts, variable_name, data, code, next_available_memory
+            )
+        else:
+            code, data, next_available_memory = translate_expression(
+                parts[0].strip(), data, code, next_available_memory
+            )
+
     return code, data, next_available_memory
 
 
