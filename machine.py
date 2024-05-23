@@ -1,5 +1,6 @@
 import logging
 import sys
+
 from isa import MEMORY_SIZE, AddressingMode, Opcode, read_code
 
 
@@ -357,9 +358,7 @@ def main(code_file, input_file):
 
 
 if __name__ == "__main__":
-    #logging.getLogger().setLevel(logging.DEBUG)
-    #assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
-    #_, code_file, input_file = sys.argv
-    code_file = "./examples/hello_user_alg_out.txt"
-    input_file = "./examples/1.txt"
+    logging.getLogger().setLevel(logging.DEBUG)
+    assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
+    _, code_file, input_file = sys.argv
     main(code_file, input_file)

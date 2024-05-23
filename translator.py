@@ -519,8 +519,6 @@ def main(source, target):
 
 
 if __name__ == "__main__":
-    #assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
-    #_, source, target = sys.argv
-    source = "./examples/prob1.js"
-    target = "./examples/prob1_out.txt"
+    assert len(sys.argv) == 3, "Wrong arguments: translator <input_file> <target_file>"
+    _, source, target = sys.argv
     main(source, target)
