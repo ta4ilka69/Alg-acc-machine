@@ -152,7 +152,6 @@ class DataPath:
     def latch_memory_address_reg(self, arg):  # arg is coming from the control unit
         self.memory_address_reg = arg
 
-
     def set_op(self, mode):
         self.alu.alu_op(mode)
 
@@ -343,8 +342,8 @@ def main(code_file, input_file):
             input_token.append(char)
     data = {}
     for string in code[1]:
-        for i in range(string["start"],string["start"]+len(string["chars"])):
-            data[str(i)] = string["chars"][i-string["start"]]
+        for i in range(string["start"], string["start"] + len(string["chars"])):
+            data[str(i)] = string["chars"][i - string["start"]]
     output, instr_counter, ticks = simulation(
         code=code[0],
         input_buffer=input_token,
