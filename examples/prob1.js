@@ -1,6 +1,6 @@
 int s = 0;
 int n = 1;
-int ordA = 48;
+int ordZero = 48;
 while(1000-n){
     if(!n%5){
         s = s + n;
@@ -16,9 +16,9 @@ int i = 1;
 while(s/i){
     i = i*10;
 }
-i = i*10;
-while(i-1){
-    print(s/i+ordA);
+i = i/10;
+while(i){
+    print(s/i+ordZero);
     s = s%i;
     i = i/10;
 }

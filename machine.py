@@ -63,7 +63,7 @@ class Alu:
             "+": self.plus,
             "-": self.minus,
             "*": self.multiply,
-            "/": self.multiply,
+            "/": self.divide,
             "%": self.modulo,
         }
 
@@ -150,6 +150,7 @@ class DataPath:
 
     def latch_memory_address_reg(self, arg):  # arg is coming from the control unit
         self.memory_address_reg = arg
+
 
     def set_op(self, mode):
         self.alu.alu_op(mode)
@@ -303,7 +304,7 @@ class ControlUnit:
             return
 
     def __repr__(self):
-        state_repr = f"TICK: {self._tick:3} PC: {self.program_counter:3} ADDR: {self.data_path.data_reg} MEM_OUT: {self.data_path.data_memory.data_memory[self.data_path.data_reg]} ACC:{self.data_path.acc}"
+        state_repr = f"TICK: {self._tick:3} PC: {self.program_counter:3} ADDR: {self.data_path.data_reg} ACC:{self.data_path.acc}"
         instr = self.program[self.program_counter]
         opcode = instr["opcode"]
         instr_repr = str(opcode)
@@ -341,14 +342,14 @@ def main(code_file, input_file):
             input_token.append(char)
     data = {}
     for string in code[1]:
-        for i in range(string["start"], len(string["chars"])):
-            data[str(i)] = string["chars"][i]
+        for i in range(string["start"],string["start"]+len(string["chars"])):
+            data[str(i)] = string["chars"][i-string["start"]]
     output, instr_counter, ticks = simulation(
         code=code[0],
         input_buffer=input_token,
         data_memory_size=MEMORY_SIZE,
         data=data,
-        limit=100000,
+        limit=1000,
     )
 
     print("".join(output))
@@ -359,6 +360,6 @@ if __name__ == "__main__":
     #logging.getLogger().setLevel(logging.DEBUG)
     #assert len(sys.argv) == 3, "Wrong arguments: machine.py <code_file> <input_file>"
     #_, code_file, input_file = sys.argv
-    code_file = "./examples/prob1_out.txt"
+    code_file = "./examples/hello_user_alg_out.txt"
     input_file = "./examples/1.txt"
     main(code_file, input_file)
