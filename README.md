@@ -6,4 +6,5 @@
 
 ## Язык программирования
 
-check
+# here is diagram in svg:
+<img src="./media/CU.svg">
