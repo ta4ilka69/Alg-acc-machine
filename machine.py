@@ -66,6 +66,8 @@ class Alu:
             "*": self.multiply,
             "/": self.divide,
             "%": self.modulo,
+            "0l": self.nop_left,
+            "0r": self.nop_right,
         }
 
     def plus(self):
@@ -88,6 +90,12 @@ class Alu:
 
     def decrement(self):
         self.out = self.left_in - 1
+
+    def nop_left(self):
+        self.out = self.left_in
+
+    def nop_right(self):
+        self.out = self.right_in
 
     def set_z_flag(self):
         self.z_flag = self.out == 0
@@ -122,18 +130,14 @@ class DataPath:
     def mux_left_in(self, signal):
         if signal == 0:
             self.alu.left_in = int(self.ports.input)
-        elif signal == 1:
-            self.alu.left_in = self.acc
         else:
-            self.alu.left_in = 0
+            self.alu.left_in = self.acc
 
     def mux_right_in(self, signal, direct_load=0):
         if signal == 0:
             self.alu.right_in = self.data_reg
-        elif signal == 1:
-            self.alu.right_in = int(direct_load)
         else:
-            self.alu.right_in = 0
+            self.alu.right_in = int(direct_load)
 
     def latch_acc(self):
         self.acc = self.alu.out
@@ -217,8 +221,7 @@ class ControlUnit:
         if opcode is Opcode.IN:
             self.data_path.sel_port(0)
             self.data_path.mux_left_in(0)
-            self.data_path.mux_right_in(2)
-            self.data_path.set_op("+")
+            self.data_path.set_op("0l")
             self.data_path.latch_acc()
             self.tick()
             return True
@@ -266,8 +269,7 @@ class ControlUnit:
                 self.data_path.set_re_wr(0)
                 self.data_path.latch_data_reg()
                 self.data_path.mux_right_in(0)
-            self.data_path.mux_left_in(2)
-            self.data_path.set_op("+")
+            self.data_path.set_op("0r")
             self.data_path.latch_acc()
             self.tick()
             return True
