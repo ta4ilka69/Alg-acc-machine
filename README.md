@@ -185,7 +185,7 @@ int a = 5;
 
 после трансляции будет выглядит примерно так:
 
-```
+```json
 {"opcode": "load", "arg": 5, "addressing_mode": "direct", "index": 1}
 {"opcode": "store", "arg": 4095, "index": 2}
 {"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 3}
@@ -202,7 +202,7 @@ int a = 5;
 
 ### DataPath
 
-<img src="./media/DP.svg">
+![Control Unit](./media/DP.svg)
 
 Реализован в классе `DataPath`
 
@@ -225,7 +225,7 @@ int a = 5;
 
 ### ControlUnit
 
-<img src="./media/CU.svg">
+![Control Unit](./media/CU.svg)
 
 Реализовано в классе `ControlUnit`.
 
@@ -399,7 +399,7 @@ instr_counter:  43 ticks: 43
 
 Пример проверки исходного кода:
 
-```
+```bash
 PS F:\git\Alg-acc-machine> poetry run pytest . -v
 =========================================================================================================== test session starts ============================================================================================================
 platform win32 -- Python 3.10.5, pytest-7.4.4, pluggy-1.5.0 -- C:\Users\art\AppData\Local\pypoetry\Cache\virtualenvs\alg-machine-pNfafQNh-py3.10\Scripts\python.exe
