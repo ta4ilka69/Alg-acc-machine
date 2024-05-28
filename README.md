@@ -419,6 +419,7 @@ PS F:\git\Alg-acc-machine> poetry run ruff check .
 PS F:\git\Alg-acc-machine> poetry run ruff format .                                                                                                                                                                                          
 4 files left unchanged        
 ```
+
 ```text
 | ФИО                    | алг            | LoC | code инстр. | инстр. | такт. |
 | Балин Артем Алексеевич | cat            | 5   | 14          | 109    | 109   |
