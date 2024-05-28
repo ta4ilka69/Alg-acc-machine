@@ -234,4 +234,188 @@ int a = 5;
 - `tick` для подсчёта количества тактов
 
 Особенности работы модели:
-- 
+
+- Остановка моделирования осуществляется при:
+  - превышении лимита выполненных инструкций
+  - исключении `StopIteration` -- если выполнена инструкция `halt`
+  - `EOFException` = при ошибке `Buffer is empty`
+- Для журнала состояний процессора используется модуль `logging`
+- Шаг моделирования соответствует одной инструкции с выводом состояния в журнал
+- Количество инструкций для моделирования ограниченино hardcode-константой
+
+## Тестирование
+
+- Тестирование осуществляется при помощи golden test`ов
+- Конфигурация тестов [здесь](./golden/)
+- Настройка тестирования [здесь](./golden_alg_test.py)
+
+CI на GitHub:
+
+```yml
+name: Python CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Run tests and collect coverage
+        run: |
+          poetry run coverage run -m pytest .
+          poetry run coverage report -m
+        env:
+          CI: true
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Check code formatting with Ruff
+        run: poetry run ruff format --check .
+
+      - name: Run Ruff linters
+        run: poetry run ruff check .
+```
+
+где:
+
+- `poetry` -- управления зависимостями для языка программирования Python.
+- `coverage` -- формирование отчёта об уровне покрытия исходного кода.
+- `pytest` -- утилита для запуска тестов.
+- `ruff` -- утилита для форматирования и проверки стиля кодирования.
+
+Пример использования журнала работы на примере `cat`:
+
+```bash
+PS F:\git\Alg-acc-machine> cat ./examples/cat_alg.js
+char c = input();
+while (c){
+    print(c);
+    c = input();
+}
+PS F:\git\Alg-acc-machine> cat ./examples/cat_input.txt
+ITMO
+PS F:\git\Alg-acc-machine> python translator.py ./examples/cat_alg.js ./examples/cat_alg_out.txt
+source LoC: 6 code instr: 14
+PS F:\git\Alg-acc-machine> cat ./examples/cat_alg_out.txt
+{"opcode": "input", "index": 0}
+{"opcode": "store", "arg": 0, "index": 1}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 2}
+{"opcode": "store", "arg": 4095, "index": 3}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 4}
+{"opcode": "jz", "index": 5, "arg": 13}
+{"opcode": "load", "arg": 0, "addressing_mode": "absolute", "index": 6}
+{"opcode": "store", "arg": 4095, "index": 7}
+{"opcode": "load", "arg": 4095, "addressing_mode": "absolute", "index": 8}
+{"opcode": "output", "index": 9}
+{"opcode": "input", "index": 10}
+{"opcode": "store", "arg": 0, "index": 11}
+{"opcode": "jump", "arg": 2, "index": 12}
+{"opcode": "halt", "index": 13}
+
+{"data": []}
+PS F:\git\Alg-acc-machine> python machine.py ./examples/cat_alg_out.txt ./examples/cat_input.txt
+DEBUG:root:TICK:   0 PC:   0 AR: 0 DR: 0 ACC:0  input
+DEBUG:root:TICK:   1 PC:   1 AR: 0 DR: 0 ACC:73         store 0
+DEBUG:root:TICK:   2 PC:   2 AR: 0 DR: 0 ACC:73         load 0
+DEBUG:root:TICK:   3 PC:   3 AR: 0 DR: 73 ACC:73        store 4095
+DEBUG:root:TICK:   4 PC:   4 AR: 4095 DR: 73 ACC:73     load 4095
+DEBUG:root:TICK:   5 PC:   5 AR: 4095 DR: 73 ACC:73     jz 13
+DEBUG:root:TICK:   6 PC:   6 AR: 4095 DR: 73 ACC:73     load 0
+DEBUG:root:TICK:   7 PC:   7 AR: 0 DR: 73 ACC:73        store 4095
+DEBUG:root:TICK:   8 PC:   8 AR: 4095 DR: 73 ACC:73     load 4095
+DEBUG:root:TICK:   9 PC:   9 AR: 4095 DR: 73 ACC:73     output
+DEBUG:root:TICK:  10 PC:  10 AR: 4095 DR: 73 ACC:73     input
+DEBUG:root:TICK:  11 PC:  11 AR: 4095 DR: 73 ACC:84     store 0
+DEBUG:root:TICK:  12 PC:  12 AR: 0 DR: 73 ACC:84        jump 2
+DEBUG:root:TICK:  13 PC:   2 AR: 0 DR: 73 ACC:84        load 0
+DEBUG:root:TICK:  14 PC:   3 AR: 0 DR: 84 ACC:84        store 4095
+DEBUG:root:TICK:  15 PC:   4 AR: 4095 DR: 84 ACC:84     load 4095
+DEBUG:root:TICK:  16 PC:   5 AR: 4095 DR: 84 ACC:84     jz 13
+DEBUG:root:TICK:  17 PC:   6 AR: 4095 DR: 84 ACC:84     load 0
+DEBUG:root:TICK:  18 PC:   7 AR: 0 DR: 84 ACC:84        store 4095
+DEBUG:root:TICK:  19 PC:   8 AR: 4095 DR: 84 ACC:84     load 4095
+DEBUG:root:TICK:  20 PC:   9 AR: 4095 DR: 84 ACC:84     output
+DEBUG:root:TICK:  21 PC:  10 AR: 4095 DR: 84 ACC:84     input
+DEBUG:root:TICK:  22 PC:  11 AR: 4095 DR: 84 ACC:77     store 0
+DEBUG:root:TICK:  23 PC:  12 AR: 0 DR: 84 ACC:77        jump 2
+DEBUG:root:TICK:  24 PC:   2 AR: 0 DR: 84 ACC:77        load 0
+DEBUG:root:TICK:  25 PC:   3 AR: 0 DR: 77 ACC:77        store 4095
+DEBUG:root:TICK:  26 PC:   4 AR: 4095 DR: 77 ACC:77     load 4095
+DEBUG:root:TICK:  27 PC:   5 AR: 4095 DR: 77 ACC:77     jz 13
+DEBUG:root:TICK:  28 PC:   6 AR: 4095 DR: 77 ACC:77     load 0
+DEBUG:root:TICK:  29 PC:   7 AR: 0 DR: 77 ACC:77        store 4095
+DEBUG:root:TICK:  30 PC:   8 AR: 4095 DR: 77 ACC:77     load 4095
+DEBUG:root:TICK:  31 PC:   9 AR: 4095 DR: 77 ACC:77     output
+DEBUG:root:TICK:  32 PC:  10 AR: 4095 DR: 77 ACC:77     input
+DEBUG:root:TICK:  33 PC:  11 AR: 4095 DR: 77 ACC:79     store 0
+DEBUG:root:TICK:  34 PC:  12 AR: 0 DR: 77 ACC:79        jump 2
+DEBUG:root:TICK:  35 PC:   2 AR: 0 DR: 77 ACC:79        load 0
+DEBUG:root:TICK:  36 PC:   3 AR: 0 DR: 79 ACC:79        store 4095
+DEBUG:root:TICK:  37 PC:   4 AR: 4095 DR: 79 ACC:79     load 4095
+DEBUG:root:TICK:  38 PC:   5 AR: 4095 DR: 79 ACC:79     jz 13
+DEBUG:root:TICK:  39 PC:   6 AR: 4095 DR: 79 ACC:79     load 0
+DEBUG:root:TICK:  40 PC:   7 AR: 0 DR: 79 ACC:79        store 4095
+DEBUG:root:TICK:  41 PC:   8 AR: 4095 DR: 79 ACC:79     load 4095
+DEBUG:root:TICK:  42 PC:   9 AR: 4095 DR: 79 ACC:79     output
+DEBUG:root:TICK:  43 PC:  10 AR: 4095 DR: 79 ACC:79     input
+WARNING:root:Input buffer is empty
+INFO:root:output_buffer: 'ITMO'
+ITMO
+instr_counter:  43 ticks: 43
+```
+
+Пример проверки исходного кода:
+
+```
+PS F:\git\Alg-acc-machine> poetry run pytest . -v
+=========================================================================================================== test session starts ============================================================================================================
+platform win32 -- Python 3.10.5, pytest-7.4.4, pluggy-1.5.0 -- C:\Users\art\AppData\Local\pypoetry\Cache\virtualenvs\alg-machine-pNfafQNh-py3.10\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: F:\git\Alg-acc-machine
+configfile: pyproject.toml
+plugins: golden-0.2.2
+collected 4 items
+
+golden_alg_test.py::test_translator_and_machine[golden/cat_alg.yml] PASSED                                                                                                                                                            [ 25%]
+golden_alg_test.py::test_translator_and_machine[golden/hello_alg.yml] PASSED                                                                                                                                                          [ 50%]
+golden_alg_test.py::test_translator_and_machine[golden/hello_user_alg.yml] PASSED                                                                                                                                                     [ 75%]
+golden_alg_test.py::test_translator_and_machine[golden/prob1_alg.yml] PASSED                                                                                                                                                          [100%]
+
+============================================================================================================ 4 passed in 0.30s =============================================================================================================
+PS F:\git\Alg-acc-machine> poetry run ruff check .                                                                                                                                                                                           
+PS F:\git\Alg-acc-machine> poetry run ruff format .                                                                                                                                                                                          
+4 files left unchanged        
+```

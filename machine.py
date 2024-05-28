@@ -306,7 +306,7 @@ class ControlUnit:
             return
 
     def __repr__(self):
-        state_repr = f"TICK: {self._tick:3} PC: {self.program_counter:3} ADDR: {self.data_path.data_reg} ACC:{self.data_path.acc}"
+        state_repr = f"TICK: {self._tick:3} PC: {self.program_counter:3} AR: {self.data_path.memory_address_reg} DR: {self.data_path.data_reg} ACC:{self.data_path.acc}"
         instr = self.program[self.program_counter]
         opcode = instr["opcode"]
         instr_repr = str(opcode)
