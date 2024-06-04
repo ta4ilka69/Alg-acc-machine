@@ -13,6 +13,7 @@ class Ports:
         self.output = 0
         self.input_buffer = input_buffer
         self.output_buffer = []
+        self.ports = [self.input_buffer, self.output_buffer]
 
     def select_port(self, sig):
         if sig == 0:
@@ -219,7 +220,7 @@ class ControlUnit:
 
     def decode_and_execute_in_out_instruction(self, instr, opcode):
         if opcode is Opcode.IN:
-            self.data_path.sel_port(0)
+   
             self.data_path.mux_left_in(0)
             self.data_path.set_op("0l")
             self.data_path.latch_acc()
